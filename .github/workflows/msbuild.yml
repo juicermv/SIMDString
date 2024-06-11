@@ -43,7 +43,8 @@ jobs:
 
             - name: Archive build output
               working-directory: ./.numake/out/SIMDStringX86
-              run: zip -9 -Zb -r ./.numake/out/SIMDStringX86/release.zip .
+              shell: powershell
+              run: Compress-Archive -Destination ./.numake/out/SIMDStringX86/release.zip -Path .
 
             - name: Upload release
               run: gh release upload release ./.numake/out/SIMDStringX86/release.zip
