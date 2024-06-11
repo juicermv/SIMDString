@@ -42,9 +42,9 @@ jobs:
                   path: ${{github.workspace}}/.numake/out/SIMDStringX86
 
             - name: Archive build output
-              working-directory: ./.numake/out/SIMDStringX86
+              working-directory: ${{github.workspace}}/.numake/out/SIMDStringX86
               shell: powershell
-              run: Compress-Archive -Destination ./.numake/out/SIMDStringX86/release.zip -Path .
+              run: Compress-Archive -Destination ${{github.workspace}}/.numake/out/SIMDStringX86/release.zip -Path .
 
             - name: Upload release
-              run: gh release upload release ./.numake/out/SIMDStringX86/release.zip
+              run: gh release upload release ${{github.workspace}}/.numake/out/SIMDStringX86/release.zip
