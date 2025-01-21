@@ -19,7 +19,7 @@ permissions:
     contents: write
 
 jobs:
-    build:
+    build-msvc:
         runs-on: windows-latest
 
         steps:
@@ -33,18 +33,49 @@ jobs:
 
             - name: Build using numake
               working-directory: ${{github.workspace}}
-              run: ."${{runner.temp}}/numake.exe" build all
+              run: ."${{runner.temp}}/numake.exe" build build_msvc
 
             - name: Upload Artifact
               uses: actions/upload-artifact@v4
               with:
-                  name: GPS_Redux
-                  path: ${{github.workspace}}/.numake/out/SIMDStringX86
+                  name: SIMDString_MSVC
+                  path: ${{github.workspace}}/numake/out/SIMDStringX86
 
             - name: Archive build output
-              working-directory: ${{github.workspace}}/.numake/out/SIMDStringX86
+              working-directory: ${{github.workspace}}/numake/out/SIMDStringX86
               shell: powershell
-              run: Compress-Archive -Destination ${{github.workspace}}/.numake/out/SIMDStringX86/release.zip -Path .
+              run: Compress-Archive -Destination ${{github.workspace}}/numake/out/SIMDStringX86/msvc.zip -Path .
 
             - name: Upload release
-              run: gh release upload release ${{github.workspace}}/.numake/out/SIMDStringX86/release.zip
+              run: gh release upload release ${{github.workspace}}/numake/out/SIMDStringX86/msvc.zip
+
+    build-mingw:
+        runs-on: ubuntu-24.04
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - run: 'sudo apt-get install g++-mingw-w64-i686'
+
+            - name: Download numake
+              run: |
+                  gh release download indev -R juicermv/numake --dir "${{runner.temp}}"
+                  chmod a+x "${{runner.temp}}"/numake
+
+            - name: Build using numake
+              working-directory: ${{env.GITHUB_WORKFLOW}}
+              run: ${{runner.temp}}/numake build build_mingw
+
+              - name: Upload Artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: SIMDString_MSVC
+                  path: ${{github.workspace}}/numake/out/SIMDStringX86
+
+                  - name: Archive build output
+                  working-directory: ${{github.workspace}}/numake/out/SIMDStringX86
+                  shell: bash
+                  run: zip -r ${{github.workspace}}/numake/out/SIMDStringX86/mingw.zip .
+    
+                - name: Upload release
+                  run: gh release upload release ${{github.workspace}}/numake/out/SIMDStringX86/mingw.zip

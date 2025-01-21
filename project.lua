@@ -1,13 +1,30 @@
-local target = workspace:create_msvc_target("SIMDStringX86")
+local project = Project(
+    "SIMDStringX86",
+    "C++",
+    "SIMDString.lib",
+    { "SIMDString.cpp" },
+    {
+        ["SIMDString.cpp"] = "SIMDString.cpp",
+        ["SIMDString.h"] = "SIMDString.h",
+    },
+    { "." }, 
+    nil,
+    nil,
+    nil,
+    nil,
+    nil,
+    nil,
+    nil,
+    "x86",
+    "StaticLibrary"
+)
 
-target.arch = "x86"
-target.output = "SIMDString.lib"
-target.static_library = true
-target.include_paths = { "." }
-target.files = { "SIMDString.cpp" }
-target.assets = {
-    ["SIMDString.cpp"] = "SIMDString.cpp",
-    ["SIMDString.h"] = "SIMDString.h",
-}
+tasks:create("build_mingw", function() 
+    project.arch = "i686"
+    project.output = "libSIMDString.a"
+    mingw:build(project)
+end)
 
-workspace:register_target(target)
+tasks:create("build_msvc", function() 
+    msvc:build(project)
+end)
