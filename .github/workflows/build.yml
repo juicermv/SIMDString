@@ -47,7 +47,7 @@ jobs:
               run: Compress-Archive -Destination ${{github.workspace}}/numake/out/SIMDStringX86/msvc.zip -Path .
 
             - name: Upload release
-              run: gh release upload release ${{github.workspace}}/numake/out/SIMDStringX86/msvc.zip
+              run: gh release upload release --clobber ${{github.workspace}}/numake/out/SIMDStringX86/msvc.zip
 
     build-mingw:
         runs-on: ubuntu-24.04
@@ -78,4 +78,4 @@ jobs:
               run: zip -r ${{github.workspace}}/numake/out/SIMDStringX86/mingw.zip .
     
             - name: Upload release
-              run: gh release upload release ${{github.workspace}}/numake/out/SIMDStringX86/mingw.zip
+              run: gh release upload release --clobber ${{github.workspace}}/numake/out/SIMDStringX86/mingw.zip
